@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>জন্ম নিবন্ধন পরিসংখ্যান — মাদারগঞ্জ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Noto+Serif+Bengali:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #151923;
+    --surface2: #1e2430;
+    --surface3: #2a3142;
+    --border: #2d3748;
+    --border-light: #4a5568;
+    --text: #f7fafc;
+    --text-muted: #a0aec0;
+    --text-bright: #ffffff;
+    --accent: #f6ad55;
+    --accent2: #4299e1;
+    --accent3: #48bb78;
+    --female: #ed64a6;
+    --male: #4299e1;
+    --jan: #48bb78;
+    --feb: #f6ad55;
+    --mar: #4299e1;
+    --apr: #9f7aea;
+    --jan-dim: rgba(72,187,120,0.2);
+    --feb-dim: rgba(246,173,85,0.2);
+    --mar-dim: rgba(66,153,225,0.2);
+    --apr-dim: rgba(159,122,234,0.2);
+    --shadow: rgba(0,0,0,0.3);
+    --shadow-light: rgba(0,0,0,0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: linear-gradient(135deg, var(--bg) 0%, #0f1419 100%);
+    color: var(--text);
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border-bottom: 2px solid var(--border-light);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 6px var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+  }
+
+  .header-icon {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(246,173,85,0.3);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  header h1 {
+    font-family: 'Noto Serif Bengali', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--text-bright);
+    text-shadow: 0 2px 4px var(--shadow);
+  }
+
+  header p { 
+    font-size: 13px; 
+    color: var(--text-muted); 
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .controls {
+    padding: 20px 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-light);
+    align-items: center;
+    box-shadow: 0 2px 4px var(--shadow-light);
+  }
+
+  .controls label {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-right: 6px;
+    font-weight: 600;
+  }
+
+  .filter-group {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    transition: all 0.3s ease;
+  }
+
+  .filter-group:hover {
+    border-color: var(--accent2);
+    box-shadow: 0 2px 8px rgba(66,153,225,0.2);
+  }
+
+  /* Summary Cards */
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 24px 40px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .summary-card {
+    background: linear-gradient(135deg, var(--surface2), var(--surface3));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px var(--shadow);
+  }
+
+  .summary-card .icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+
+  .summary-card .value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .summary-card .label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .filter-group label { margin: 0; }
+
+  .btn-group { display: flex; gap: 4px; flex-wrap: wrap; }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn:hover::before {
+    left: 100%;
+  }
+
+  .btn:hover { 
+    border-color: var(--accent2); 
+    color: var(--text-bright); 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px var(--shadow-light);
+  }
+  
+  .btn.active { 
+    background: linear-gradient(135deg, var(--accent2), var(--accent)); 
+    border-color: var(--accent2); 
+    color: var(--text-bright); 
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(66,153,225,0.3);
+  }
+
+  .btn.month-jan.active { background: var(--jan); border-color: var(--jan); color: #0d1117; }
+  .btn.month-feb.active { background: var(--feb); border-color: var(--feb); color: #0d1117; }
+  .btn.month-mar.active { background: var(--mar); border-color: var(--mar); color: #0d1117; }
+  .btn.month-apr.active { background: var(--apr); border-color: var(--apr); color: #0d1117; }
+
+  .btn.gender-f.active { background: var(--female); border-color: var(--female); color: #0d1117; }
+  .btn.gender-m.active { background: var(--male); border-color: var(--male); color: #0d1117; }
+
+  select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+  }
+
+  select:focus { border-color: var(--accent2); }
+
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    padding: 12px 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    display: flex; gap: 6px; align-items: center;
+  }
+
+  .stat-pill span:first-child { color: var(--text-muted); }
+  .stat-pill span:last-child { font-weight: 600; color: var(--accent); }
+
+  /* Chart Container */
+  .charts-section {
+    padding: 32px 40px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .charts-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 24px;
+    text-align: center;
+    font-family: 'Noto Serif Bengali', serif;
+  }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .chart-card {
+    background: linear-gradient(135deg, var(--surface2), var(--surface3));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .chart-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px var(--shadow);
+  }
+
+  .chart-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 16px;
+    font-family: 'Noto Serif Bengali', serif;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 250px;
+    margin-bottom: 12px;
+  }
+
+  .chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+  }
+
+  .table-wrap {
+    padding: 24px 40px 40px;
+    overflow-x: auto;
+    background: var(--surface);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px var(--shadow);
+  }
+
+  thead th {
+    position: sticky; top: 0;
+    background: linear-gradient(135deg, var(--surface2), var(--surface3));
+    color: var(--text-bright);
+    font-weight: 600;
+    font-size: 12px;
+    text-align: center;
+    padding: 16px 12px;
+    border-bottom: 2px solid var(--accent);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  thead th:first-child, thead th:nth-child(2), thead th:nth-child(3) {
+    text-align: left;
+  }
+
+  thead th.highlight-col {
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    color: var(--text-bright);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  tbody tr:nth-child(even) {
+    background: rgba(255,255,255,0.02);
+  }
+
+  tbody tr:hover { 
+    background: rgba(66,153,225,0.1);
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px var(--shadow-light);
+  }
+
+  tbody tr.hidden { display: none; }
+
+  tbody td {
+    padding: 12px 12px;
+    text-align: center;
+    color: var(--text);
+    font-weight: 500;
+    position: relative;
+  }
+
+  tbody td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .month-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+
+  .month-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px var(--shadow-light);
+  }
+
+  .m-jan { 
+    background: linear-gradient(135deg, var(--jan-dim), rgba(72,187,120,0.3)); 
+    color: var(--jan); 
+    border: 1px solid var(--jan); 
+    box-shadow: 0 2px 4px rgba(72,187,120,0.2);
+  }
+  
+  .m-feb { 
+    background: linear-gradient(135deg, var(--feb-dim), rgba(246,173,85,0.3)); 
+    color: var(--feb); 
+    border: 1px solid var(--feb); 
+    box-shadow: 0 2px 4px rgba(246,173,85,0.2);
+  }
+  
+  .m-mar { 
+    background: linear-gradient(135deg, var(--mar-dim), rgba(66,153,225,0.3)); 
+    color: var(--mar); 
+    border: 1px solid var(--mar); 
+    box-shadow: 0 2px 4px rgba(66,153,225,0.2);
+  }
+  
+  .m-apr { 
+    background: linear-gradient(135deg, var(--apr-dim), rgba(159,122,234,0.3)); 
+    color: var(--apr); 
+    border: 1px solid var(--apr); 
+    box-shadow: 0 2px 4px rgba(159,122,234,0.2);
+  }
+
+  .gender-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+
+  .gender-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px var(--shadow-light);
+  }
+
+  .g-f { 
+    background: linear-gradient(135deg, rgba(237,100,166,0.2), rgba(237,100,166,0.3)); 
+    color: var(--female); 
+    border: 1px solid var(--female); 
+    box-shadow: 0 2px 4px rgba(237,100,166,0.2);
+  }
+  
+  .g-m { 
+    background: linear-gradient(135deg, rgba(66,153,225,0.2), rgba(66,153,225,0.3)); 
+    color: var(--male); 
+    border: 1px solid var(--male); 
+    box-shadow: 0 2px 4px rgba(66,153,225,0.2);
+  }
+
+  .num { font-variant-numeric: tabular-nums; }
+
+  .total-cell {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .cert-cell { color: var(--accent2); font-weight: 600; }
+  .corr-cell { color: #bc8cff; }
+
+  .bar-cell { position: relative; }
+  .mini-bar {
+    display: inline-block;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--accent2);
+    margin-left: 4px;
+    vertical-align: middle;
+    opacity: 0.6;
+    transition: width 0.3s;
+  }
+
+  .no-results {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 48px;
+    font-size: 16px;
+    display: none;
+  }
+
+  .divider-union {
+    background: rgba(88,166,255,0.03);
+  }
+
+  thead th.highlight-col { color: var(--accent); }
+
+  .reset-btn {
+    margin-left: auto;
+    padding: 5px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: 'Noto Sans Bengali', sans-serif;
+    font-size: 12px;
+    transition: all 0.15s;
+  }
+
+  .reset-btn:hover { color: var(--text); border-color: var(--text-muted); }
+
+  @media (max-width: 768px) {
+    header, .controls, .summary-cards, .charts-section, .table-wrap { 
+      padding-left: 20px; padding-right: 20px; 
+    }
+    
+    header { padding: 20px; }
+    header h1 { font-size: 18px; }
+    header p { font-size: 12px; }
+    
+    .summary-cards { 
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+      gap: 12px;
+      padding: 20px;
+    }
+    
+    .summary-card { padding: 16px; }
+    .summary-card .value { font-size: 24px; }
+    
+    .charts-grid { 
+      grid-template-columns: 1fr; 
+      gap: 16px;
+    }
+    
+    .controls { padding: 16px 20px; gap: 12px; }
+    .filter-group { padding: 6px 10px; }
+    .btn { padding: 6px 12px; font-size: 12px; }
+    
+    table { font-size: 12px; }
+    thead th { padding: 12px 8px; font-size: 10px; }
+    tbody td { padding: 8px 6px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-icon">📋</div>
+  <div>
+    <h1>জন্ম নিবন্ধন পরিসংখ্যান — মাদারগঞ্জ, জামালপুর</h1>
+    <p>সময়কাল: জানুয়ারি–এপ্রিল ২০২৬ &nbsp;|&nbsp; ৭টি ইউনিয়ন</p>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="filter-group">
+    <label>ইউনিয়ন:</label>
+    <select id="unionFilter">
+      <option value="all">সকল ইউনিয়ন</option>
+      <option value="সিধুলী">সিধুলী</option>
+      <option value="কড়াইচড়া">কড়াইচড়া</option>
+      <option value="জোড়খালী">জোড়খালী</option>
+      <option value="গুনারীতলা">গুনারীতলা</option>
+      <option value="চর পাকেরদহ">চর পাকেরদহ</option>
+      <option value="বালিজুড়ী">বালিজুড়ী</option>
+      <option value="আদারভিটা">আদারভিটা</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label>মাস:</label>
+    <div class="btn-group" id="monthBtns">
+      <button class="btn month-jan active" data-month="all">সকল</button>
+      <button class="btn month-jan" data-month="জানুয়ারি">জানুয়ারি</button>
+      <button class="btn month-feb" data-month="ফেব্রুয়ারি">ফেব্রুয়ারি</button>
+      <button class="btn month-mar" data-month="মার্চ">মার্চ</button>
+      <button class="btn month-apr" data-month="এপ্রিল">এপ্রিল</button>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <label>লিঙ্গ:</label>
+    <div class="btn-group" id="genderBtns">
+      <button class="btn active" data-gender="all">সকল</button>
+      <button class="btn gender-f" data-gender="নারী">নারী</button>
+      <button class="btn gender-m" data-gender="পুরুষ">পুরুষ</button>
+    </div>
+  </div>
+
+  <button class="reset-btn" id="resetBtn">↺ রিসেট</button>
+</div>
+
+<div class="summary-cards">
+  <div class="summary-card">
+    <div class="icon">👶</div>
+    <div class="value" id="summary-total">০</div>
+    <div class="label">সর্বমোট জন্মনিবন্ধন</div>
+  </div>
+  <div class="summary-card">
+    <div class="icon">👧</div>
+    <div class="value" id="summary-female">০</div>
+    <div class="label">নারী সন্তান</div>
+  </div>
+  <div class="summary-card">
+    <div class="icon">👦</div>
+    <div class="value" id="summary-male">০</div>
+    <div class="label">পুরুষ সন্তান</div>
+  </div>
+  <div class="summary-card">
+    <div class="icon">📄</div>
+    <div class="value" id="summary-cert">০</div>
+    <div class="label">সার্টিফিকেট প্রদান</div>
+  </div>
+  <div class="summary-card">
+    <div class="icon">✏️</div>
+    <div class="value" id="summary-corr">০</div>
+    <div class="label">সংশোধন</div>
+  </div>
+</div>
+
+
+<div class="charts-section">
+  <h2 class="charts-title">📊 ইউনিয়নভিত্তিক পরিসংখ্যান</h2>
+  <div class="charts-grid" id="chartsGrid">
+    <!-- Charts will be dynamically generated here -->
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table id="mainTable">
+    <thead>
+      <tr>
+        <th>ইউনিয়ন</th>
+        <th>মাস</th>
+        <th>লিঙ্গ</th>
+        <th>০–১ দিন</th>
+        <th>২–৪৫ দিন</th>
+        <th>৪৬দি–১ বছর</th>
+        <th>১–৫ বছর</th>
+        <th>৫–১৮ বছর</th>
+        <th class="highlight-col">১৮+ বছর</th>
+        <th class="highlight-col">সর্বমোট</th>
+        <th>সার্টিফিকেট</th>
+        <th>সংশোধন</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+  </table>
+  <div class="no-results" id="noResults">কোনো তথ্য পাওয়া যায়নি</div>
+</div>
+
+<script>
+const MONTHS = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল'];
+
+// Data: [union, month, gender, d0_1, d2_45, d46_1y, y1_5, y5_18, y18plus, total, cert, corr]
+const raw = [
+  // সিধুলী
+  ['সিধুলী','জানুয়ারি','নারী',0,14,4,7,24,34,84,75,47],
+  ['সিধুলী','জানুয়ারি','পুরুষ',0,22,2,8,13,44,93,74,50],
+  ['সিধুলী','ফেব্রুয়ারি','নারী',0,14,0,3,3,9,29,16,16],
+  ['সিধুলী','ফেব্রুয়ারি','পুরুষ',0,21,5,6,25,43,104,95,44],
+  ['সিধুলী','মার্চ','নারী',0,27,0,6,9,39,83,60,40],
+  ['সিধুলী','মার্চ','পুরুষ',0,15,1,2,3,22,43,26,16],
+  ['সিধুলী','এপ্রিল','নারী',0,17,5,1,6,11,40,24,19],
+  ['সিধুলী','এপ্রিল','পুরুষ',0,20,1,2,8,26,58,43,22],
+
+  // কড়াইচড়া
+  ['কড়াইচড়া','জানুয়ারি','নারী',0,22,1,3,9,43,79,79,43],
+  ['কড়াইচড়া','জানুয়ারি','পুরুষ',0,48,3,7,14,131,203,204,26],
+  ['কড়াইচড়া','ফেব্রুয়ারি','নারী',0,10,1,10,23,16,60,60,27],
+  ['কড়াইচড়া','ফেব্রুয়ারি','পুরুষ',0,5,3,3,9,39,59,59,7],
+  ['কড়াইচড়া','মার্চ','নারী',0,1,4,3,8,20,36,37,13],
+  ['কড়াইচড়া','মার্চ','পুরুষ',1,7,5,10,13,49,85,89,26],
+  ['কড়াইচড়া','এপ্রিল','নারী',2,22,8,11,27,46,116,123,32],
+  ['কড়াইচড়া','এপ্রিল','পুরুষ',1,31,7,16,27,64,146,148,41],
+
+  // জোড়খালী
+  ['জোড়খালী','জানুয়ারি','নারী',0,7,19,4,11,41,82,68,41],
+  ['জোড়খালী','জানুয়ারি','পুরুষ',0,9,9,4,13,40,75,65,31],
+  ['জোড়খালী','ফেব্রুয়ারি','নারী',0,11,19,28,42,56,156,151,47],
+  ['জোড়খালী','ফেব্রুয়ারি','পুরুষ',0,13,9,9,20,32,83,79,48],
+  ['জোড়খালী','মার্চ','নারী',0,6,4,10,16,30,66,62,46],
+  ['জোড়খালী','মার্চ','পুরুষ',0,10,18,19,33,72,152,141,54],
+  ['জোড়খালী','এপ্রিল','নারী',0,4,9,5,11,25,54,46,23],
+  ['জোড়খালী','এপ্রিল','পুরুষ',0,15,22,11,18,74,140,135,44],
+
+  // গুনারীতলা
+  ['গুনারীতলা','জানুয়ারি','নারী',0,26,2,9,20,46,103,124,81],
+  ['গুনারীতলা','জানুয়ারি','পুরুষ',0,43,4,10,10,104,171,224,82],
+  ['গুনারীতলা','ফেব্রুয়ারি','নারী',0,25,5,18,37,69,154,130,74],
+  ['গুনারীতলা','ফেব্রুয়ারি','পুরুষ',0,12,1,5,10,49,77,103,64],
+  ['গুনারীতলা','মার্চ','নারী',0,2,1,10,16,28,57,91,76],
+  ['গুনারীতলা','মার্চ','পুরুষ',0,2,2,4,8,77,93,56,60],
+  ['গুনারীতলা','এপ্রিল','নারী',0,3,0,1,13,32,49,39,46],
+  ['গুনারীতলা','এপ্রিল','পুরুষ',0,31,4,21,52,84,192,173,58],
+
+  // চর পাকেরদহ
+  ['চর পাকেরদহ','জানুয়ারি','নারী',0,2,4,11,28,49,94,95,46],
+  ['চর পাকেরদহ','জানুয়ারি','পুরুষ',0,15,9,9,19,75,127,123,56],
+  ['চর পাকেরদহ','ফেব্রুয়ারি','নারী',0,1,7,9,11,26,54,56,34],
+  ['চর পাকেরদহ','ফেব্রুয়ারি','পুরুষ',0,5,6,9,31,58,109,109,47],
+  ['চর পাকেরদহ','মার্চ','নারী',0,7,16,44,50,65,182,188,57],
+  ['চর পাকেরদহ','মার্চ','পুরুষ',0,6,1,9,16,36,68,70,45],
+  ['চর পাকেরদহ','এপ্রিল','নারী',1,11,14,12,16,45,99,100,51],
+  ['চর পাকেরদহ','এপ্রিল','পুরুষ',0,13,4,30,73,90,210,214,67],
+
+  // বালিজুড়ী
+  ['বালিজুড়ী','জানুয়ারি','নারী',0,16,5,8,17,48,95,95,46],
+  ['বালিজুড়ী','জানুয়ারি','পুরুষ',0,5,6,10,20,44,85,93,41],
+  ['বালিজুড়ী','ফেব্রুয়ারি','নারী',0,18,7,26,41,93,186,183,33],
+  ['বালিজুড়ী','ফেব্রুয়ারি','পুরুষ',0,13,4,5,18,51,91,89,32],
+  ['বালিজুড়ী','মার্চ','নারী',0,9,3,5,12,31,60,65,28],
+  ['বালিজুড়ী','মার্চ','পুরুষ',0,20,8,8,14,74,127,125,39],
+  ['বালিজুড়ী','এপ্রিল','নারী',0,12,2,9,16,37,76,76,31],
+  ['বালিজুড়ী','এপ্রিল','পুরুষ',0,22,4,27,49,111,215,201,33],
+
+  // আদারভিটা
+  ['আদারভিটা','জানুয়ারি','নারী',0,28,4,17,27,67,143,133,42],
+  ['আদারভিটা','জানুয়ারি','পুরুষ',0,38,0,18,25,159,240,214,56],
+  ['আদারভিটা','ফেব্রুয়ারি','নারী',0,26,6,5,6,20,63,45,37],
+  ['আদারভিটা','ফেব্রুয়ারি','পুরুষ',0,27,4,10,25,71,137,117,67],
+  ['আদারভিটা','মার্চ','নারী',0,29,1,23,48,73,174,159,65],
+  ['আদারভিটা','মার্চ','পুরুষ',0,35,5,27,71,107,245,224,67],
+  ['আদারভিটা','এপ্রিল','নারী',1,27,4,12,23,41,108,87,47],
+  ['আদারভিটা','এপ্রিল','পুরুষ',0,18,1,13,9,55,96,85,39],
+];
+
+const maxTotal = Math.max(...raw.map(r=>r[10]));
+
+const MONTH_CLASS = {
+  'জানুয়ারি':'m-jan','ফেব্রুয়ারি':'m-feb','মার্চ':'m-mar','এপ্রিল':'m-apr'
+};
+const MONTH_LABEL = {
+  'জানুয়ারি':'জানু','ফেব্রুয়ারি':'ফেব্রু','মার্চ':'মার্চ','এপ্রিল':'এপ্রিল'
+};
+
+function renderTable(data) {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  if (!data.length) {
+    document.getElementById('noResults').style.display = 'block';
+    updateStats([]);
+    return;
+  }
+  document.getElementById('noResults').style.display = 'none';
+
+  data.forEach(row => {
+    const [union, month, gender, d0,d2,d46,y1,y5,y18,total,cert,corr] = row;
+    const barW = Math.round((total / maxTotal) * 60);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${union}</td>
+      <td><span class="month-badge ${MONTH_CLASS[month]}">${MONTH_LABEL[month]}</span></td>
+      <td><span class="gender-badge ${gender==='নারী'?'g-f':'g-m'}">${gender}</span></td>
+      <td class="num">${d0||'—'}</td>
+      <td class="num">${d2}</td>
+      <td class="num">${d46}</td>
+      <td class="num">${y1}</td>
+      <td class="num">${y5}</td>
+      <td class="num">${y18}</td>
+      <td class="total-cell num">${total}<span class="mini-bar" style="width:${barW}px"></span></td>
+      <td class="cert-cell num">${cert}</td>
+      <td class="corr-cell num">${corr}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  updateStats(data);
+}
+
+function updateStats(data) {
+  // Update summary cards only (stats bar removed)
+  updateSummaryCards(data);
+}
+
+function updateSummaryCards(data) {
+  const total = data.reduce((a,r)=>a+r[9],0);
+  const female = data.filter(r=>r[2]==='নারী').reduce((a,r)=>a+r[9],0);
+  const male = data.filter(r=>r[2]==='পুরুষ').reduce((a,r)=>a+r[9],0);
+  const cert = data.reduce((a,r)=>a+r[10],0);
+  const corr = data.reduce((a,r)=>a+r[11],0);
+  
+  document.getElementById('summary-total').textContent = total.toLocaleString();
+  document.getElementById('summary-female').textContent = female.toLocaleString();
+  document.getElementById('summary-male').textContent = male.toLocaleString();
+  document.getElementById('summary-cert').textContent = cert.toLocaleString();
+  document.getElementById('summary-corr').textContent = corr.toLocaleString();
+}
+
+function createCharts() {
+  const union = document.getElementById('unionFilter').value;
+  const month = document.querySelector('#monthBtns .btn.active')?.dataset.month || 'all';
+  const gender = document.querySelector('#genderBtns .btn.active')?.dataset.gender || 'all';
+  
+  // Get filtered data
+  let filtered = raw.filter(r => {
+    if (union !== 'all' && r[0] !== union) return false;
+    if (month !== 'all' && r[1] !== month) return false;
+    if (gender !== 'all' && r[2] !== gender) return false;
+    return true;
+  });
+  
+  const chartsGrid = document.getElementById('chartsGrid');
+  chartsGrid.innerHTML = '';
+  
+  if (union === 'all') {
+    // Show histogram for all unions
+    createHistogram(filtered);
+  } else {
+    // Show pie chart for selected union
+    createPieChart(union, filtered);
+  }
+}
+
+function createHistogram(filteredData) {
+  const chartsGrid = document.getElementById('chartsGrid');
+  const unions = ['সিধুলী', 'কড়াইচড়া', 'জোড়খালী', 'গুনারীতলা', 'চর পাকেরদহ', 'বালিজুড়ী', 'আদারভিটা'];
+  
+  const chartCard = document.createElement('div');
+  chartCard.className = 'chart-card';
+  chartCard.style.gridColumn = '1 / -1'; // Make it span full width
+  chartCard.innerHTML = `
+    <h3>📊 সকল ইউনিয়নের তুলনামূলক পরিসংখ্যান</h3>
+    <div class="chart-container">
+      <canvas id="histogram-chart"></canvas>
+    </div>
+  `;
+  chartsGrid.appendChild(chartCard);
+  
+  // Prepare data for histogram using filtered data
+  const unionData = unions.map(union => {
+    const data = filteredData.filter(r => r[0] === union);
+    const total = data.reduce((a,r)=>a+r[9],0);
+    const female = data.filter(r=>r[2]==='নারী').reduce((a,r)=>a+r[9],0);
+    const male = data.filter(r=>r[2]==='পুরুষ').reduce((a,r)=>a+r[9],0);
+    return { union, total, female, male };
+  });
+  
+  const ctx = document.getElementById('histogram-chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: unionData.map(d => d.union),
+      datasets: [
+        {
+          label: 'নারী',
+          data: unionData.map(d => d.female),
+          backgroundColor: 'rgba(237, 100, 166, 0.8)',
+          borderColor: 'rgba(237, 100, 166, 1)',
+          borderWidth: 2
+        },
+        {
+          label: 'পুরুষ',
+          data: unionData.map(d => d.male),
+          backgroundColor: 'rgba(66, 153, 225, 0.8)',
+          borderColor: 'rgba(66, 153, 225, 1)',
+          borderWidth: 2
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            color: '#f7fafc',
+            font: {
+              family: "'Noto Sans Bengali', sans-serif"
+            }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.dataset.label || '';
+              const value = context.parsed.y || 0;
+              return `${label}: ${value.toLocaleString()}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: '#a0aec0',
+            font: {
+              family: "'Noto Sans Bengali', sans-serif"
+            }
+          },
+          grid: {
+            color: '#2d3748'
+          }
+        },
+        y: {
+          ticks: {
+            color: '#a0aec0'
+          },
+          grid: {
+            color: '#2d3748'
+          }
+        }
+      }
+    }
+  });
+}
+
+function createPieChart(union, filteredData) {
+  const chartsGrid = document.getElementById('chartsGrid');
+  const unionData = filteredData.filter(r => r[0] === union);
+  
+  if (unionData.length === 0) return;
+  
+  const total = unionData.reduce((a,r)=>a+r[9],0);
+  const female = unionData.filter(r=>r[2]==='নারী').reduce((a,r)=>a+r[9],0);
+  const male = unionData.filter(r=>r[2]==='পুরুষ').reduce((a,r)=>a+r[9],0);
+  
+  // Create chart card
+  const chartCard = document.createElement('div');
+  chartCard.className = 'chart-card';
+  chartCard.innerHTML = `
+    <h3>${union} - লিঙ্গ বিতরণ</h3>
+    <div class="chart-container">
+      <canvas id="pie-chart"></canvas>
+    </div>
+    <div class="chart-legend">
+      <div class="legend-item">
+        <div class="legend-color" style="background: var(--female)"></div>
+        <span>নারী: ${female.toLocaleString()} (${((female/total)*100).toFixed(1)}%)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: var(--male)"></div>
+        <span>পুরুষ: ${male.toLocaleString()} (${((male/total)*100).toFixed(1)}%)</span>
+      </div>
+    </div>
+  `;
+  chartsGrid.appendChild(chartCard);
+  
+  // Create pie chart
+  const ctx = document.getElementById('pie-chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['নারী', 'পুরুষ'],
+      datasets: [{
+        data: [female, male],
+        backgroundColor: [
+          'rgba(237, 100, 166, 0.8)',
+          'rgba(66, 153, 225, 0.8)'
+        ],
+        borderColor: [
+          'rgba(237, 100, 166, 1)',
+          'rgba(66, 153, 225, 1)'
+        ],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.parsed || 0;
+              const total = context.dataset.data.reduce((a, b) => a + b, 0);
+              const percentage = ((value / total) * 100).toFixed(1);
+              return `${label}: ${value.toLocaleString()} (${percentage}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function applyFilters() {
+  const union = document.getElementById('unionFilter').value;
+  const month = document.querySelector('#monthBtns .btn.active')?.dataset.month || 'all';
+  const gender = document.querySelector('#genderBtns .btn.active')?.dataset.gender || 'all';
+
+  let filtered = raw.filter(r => {
+    if (union !== 'all' && r[0] !== union) return false;
+    if (month !== 'all' && r[1] !== month) return false;
+    if (gender !== 'all' && r[2] !== gender) return false;
+    return true;
+  });
+  renderTable(filtered);
+  
+  // Update charts when filters change
+  createCharts();
+}
+
+// Month buttons
+document.getElementById('monthBtns').addEventListener('click', e => {
+  const btn = e.target.closest('.btn');
+  if (!btn) return;
+  document.querySelectorAll('#monthBtns .btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+});
+
+// Gender buttons
+document.getElementById('genderBtns').addEventListener('click', e => {
+  const btn = e.target.closest('.btn');
+  if (!btn) return;
+  document.querySelectorAll('#genderBtns .btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+});
+
+document.getElementById('unionFilter').addEventListener('change', applyFilters);
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  document.getElementById('unionFilter').value = 'all';
+  document.querySelectorAll('#monthBtns .btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  document.querySelectorAll('#genderBtns .btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  applyFilters();
+});
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  applyFilters();
+  createCharts();
+});
+if (document.readyState !== 'loading') {
+  applyFilters();
+  createCharts();
+}
+</script>
+</body>
+</html>
